@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
     actions: {
         setUser(user) {
             this.userInfo = user
+            localStorage.setItem('userInfo', JSON.stringify(user))
         },
         setToken(token) {
             this.token = token
@@ -18,6 +19,7 @@ export const useUserStore = defineStore('user', {
             this.userInfo = null
             this.token = null
             localStorage.removeItem('token')
+            localStorage.removeItem('userInfo')
         }
     }
 })

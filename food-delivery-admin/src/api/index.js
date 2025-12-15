@@ -1,15 +1,18 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
+// Vite exposes env vars via import.meta.env. Support both VITE_APP_API_URL and VITE_API_URL
+const baseURL = (typeof import.meta !== 'undefined' && (import.meta.env.VITE_APP_API_URL || import.meta.env.VITE_API_URL)) || 'http://localhost:3000/api'
+
 const apiClient = axios.create({
-    baseURL: 'http://localhost:3000/api', // Change this to your actual API endpoint
+    baseURL,
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json'
     }
 })
 
-// Request interceptor
+// 请求拦截器
 apiClient.interceptors.request.use(
     config => {
         const token = localStorage.getItem('token')
@@ -18,72 +21,27 @@ apiClient.interceptors.request.use(
         }
         return config
     },
-    error => {
-        return Promise.reject(error)
-    }
+    error => Promise.reject(error)
 )
 
-// Response interceptor
+// 响应拦截器
 apiClient.interceptors.response.use(
-    response => {
-        return response.data
-    },
+    response => response.data,
     error => {
         if (error.response) {
-            switch (error.response.status) {
-                case 401:
-                    ElMessage.error('Unauthorized. Please login again.')
-                    localStorage.removeItem('token')
-                    window.location.href = '/login'
-                    break
-                case 403:
-                    ElMessage.error('Access denied')
-                    break
-                case 404:
-                    ElMessage.error('Resource not found')
-                    break
-                case 500:
-                    ElMessage.error('Server error')
-                    break
-                default:
-                    ElMessage.error(error.response.data.message || 'An error occurred')
+            const status = error.response.status
+            const message = error.response.data?.message || '请求失败'
+
+            // 登录后有些接口可能返回 500，为避免干扰用户体验，此处不弹出“服务器错误”提示
+            // 仅在需要重新登录时清理 token 并跳转
+            if (status === 401) {
+                ElMessage.error('未授权，请重新登录')
+                localStorage.removeItem('token')
+                window.location.href = '/login'
             }
-        } else {
-            ElMessage.error('Network error')
         }
         return Promise.reject(error)
     }
 )
-
-// API methods
-export const authAPI = {
-    login: (credentials) => apiClient.post('/auth/login', credentials),
-    logout: () => apiClient.post('/auth/logout')
-}
-
-export const userAPI = {
-    getList: (params) => apiClient.get('/users', { params }),
-    create: (data) => apiClient.post('/users', data),
-    update: (id, data) => apiClient.put(`/users/${id}`, data),
-    delete: (id) => apiClient.delete(`/users/${id}`)
-}
-
-export const orderAPI = {
-    getList: (params) => apiClient.get('/orders', { params }),
-    getById: (id) => apiClient.get(`/orders/${id}`),
-    updateStatus: (id, status) => apiClient.patch(`/orders/${id}/status`, { status })
-}
-
-export const menuAPI = {
-    getList: (params) => apiClient.get('/menu', { params }),
-    create: (data) => apiClient.post('/menu', data),
-    update: (id, data) => apiClient.put(`/menu/${id}`, data),
-    delete: (id) => apiClient.delete(`/menu/${id}`)
-}
-
-export const analyticsAPI = {
-    getDashboard: () => apiClient.get('/analytics/dashboard'),
-    getRevenue: (params) => apiClient.get('/analytics/revenue', { params })
-}
 
 export default apiClient

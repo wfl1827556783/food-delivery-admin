@@ -1,27 +1,27 @@
 <template>
   <div class="analytics">
-    <h2>Analytics & Reports</h2>
+    <h2>数据分析与报告</h2>
 
     <!-- Date Range Picker -->
-    <el-card class="filter-card">
+    <el-card class="filter-card glass-card">
       <el-date-picker
           v-model="dateRange"
           type="daterange"
-          range-separator="To"
-          start-placeholder="Start date"
-          end-placeholder="End date"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
           @change="fetchAnalytics"
       />
       <el-button type="primary" style="margin-left: 10px;" @click="exportReport">
-        <el-icon><Download /></el-icon> Export Report
+        <el-icon><Download /></el-icon> 导出报告
       </el-button>
     </el-card>
 
     <!-- KPI Cards -->
     <el-row :gutter="20" class="kpi-row">
       <el-col :span="6">
-        <el-card class="kpi-card">
-          <el-statistic title="Total Revenue" :value="analytics.revenue" prefix="$" />
+        <el-card class="kpi-card glass-card">
+          <el-statistic title="总收入" :value="analytics.revenue" prefix="¥" />
           <div class="trend">
             <el-icon color="#67c23a"><CaretTop /></el-icon>
             <span class="trend-text">+12.5%</span>
@@ -29,8 +29,8 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card class="kpi-card">
-          <el-statistic title="Orders Completed" :value="analytics.ordersCompleted" />
+        <el-card class="kpi-card glass-card">
+          <el-statistic title="已完成订单" :value="analytics.ordersCompleted" />
           <div class="trend">
             <el-icon color="#67c23a"><CaretTop /></el-icon>
             <span class="trend-text">+8.3%</span>
@@ -38,8 +38,8 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card class="kpi-card">
-          <el-statistic title="Average Order Value" :value="analytics.avgOrderValue" prefix="$" />
+        <el-card class="kpi-card glass-card">
+          <el-statistic title="平均订单价值" :value="analytics.avgOrderValue" prefix="¥" />
           <div class="trend">
             <el-icon color="#f56c6c"><CaretBottom /></el-icon>
             <span class="trend-text">-2.1%</span>
@@ -47,8 +47,8 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card class="kpi-card">
-          <el-statistic title="Customer Satisfaction" :value="analytics.satisfaction" suffix="%" />
+        <el-card class="kpi-card glass-card">
+          <el-statistic title="客户满意度" :value="analytics.satisfaction" suffix="%" />
           <div class="trend">
             <el-icon color="#67c23a"><CaretTop /></el-icon>
             <span class="trend-text">+5.2%</span>
@@ -60,14 +60,14 @@
     <!-- Charts -->
     <el-row :gutter="20" class="chart-row">
       <el-col :span="16">
-        <el-card>
-          <h3>Revenue Trend (Last 30 Days)</h3>
+        <el-card class="glass-card">
+          <h3>收入趋势（最近30天）</h3>
           <div ref="revenueTrendRef" style="width: 100%; height: 350px;"></div>
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card>
-          <h3>Order Status Distribution</h3>
+        <el-card class="glass-card">
+          <h3>订单状态分布</h3>
           <div ref="orderStatusRef" style="width: 100%; height: 350px;"></div>
         </el-card>
       </el-col>
@@ -75,32 +75,32 @@
 
     <el-row :gutter="20" class="chart-row">
       <el-col :span="12">
-        <el-card>
-          <h3>Top Selling Items</h3>
+        <el-card class="glass-card">
+          <h3>热卖商品排行</h3>
           <div ref="topItemsRef" style="width: 100%; height: 350px;"></div>
         </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card>
-          <h3>Peak Hours Analysis</h3>
+        <el-card class="glass-card">
+          <h3>高峰时段分析</h3>
           <div ref="peakHoursRef" style="width: 100%; height: 350px;"></div>
         </el-card>
       </el-col>
     </el-row>
 
     <!-- Top Performers Table -->
-    <el-card class="performers-card">
-      <h3>Top Performing Drivers</h3>
+    <el-card class="performers-card glass-card">
+      <h3>优秀司机排行</h3>
       <el-table :data="topDrivers">
-        <el-table-column prop="rank" label="Rank" width="80" />
-        <el-table-column prop="name" label="Driver Name" />
-        <el-table-column prop="deliveries" label="Deliveries" />
-        <el-table-column prop="rating" label="Rating">
+        <el-table-column prop="rank" label="排名" width="80" />
+        <el-table-column prop="name" label="司机姓名" />
+        <el-table-column prop="deliveries" label="配送数" />
+        <el-table-column prop="rating" label="评分">
           <template #default="{ row }">
             <el-rate v-model="row.rating" disabled show-score />
           </template>
         </el-table-column>
-        <el-table-column prop="earnings" label="Earnings" />
+        <el-table-column prop="earnings" label="收入" />
       </el-table>
     </el-card>
   </div>
@@ -120,9 +120,9 @@ const analytics = ref({
 })
 
 const topDrivers = ref([
-  { rank: 1, name: 'Mike Johnson', deliveries: 156, rating: 4.9, earnings: '$3,420' },
-  { rank: 2, name: 'Sarah Lee', deliveries: 142, rating: 4.8, earnings: '$3,120' },
-  { rank: 3, name: 'David Chen', deliveries: 138, rating: 4.7, earnings: '$3,050' }
+  { rank: 1, name: '张三', deliveries: 156, rating: 4.9, earnings: '¥3,420' },
+  { rank: 2, name: '李四', deliveries: 142, rating: 4.8, earnings: '¥3,120' },
+  { rank: 3, name: '王五', deliveries: 138, rating: 4.7, earnings: '¥3,050' }
 ])
 
 const revenueTrendRef = ref(null)
@@ -131,11 +131,11 @@ const topItemsRef = ref(null)
 const peakHoursRef = ref(null)
 
 const fetchAnalytics = () => {
-  ElMessage.success('Analytics updated')
+  ElMessage.success('数据已更新')
 }
 
 const exportReport = () => {
-  ElMessage.success('Report exported successfully')
+  ElMessage.success('报告导出成功')
 }
 
 const initCharts = () => {
@@ -145,7 +145,7 @@ const initCharts = () => {
     tooltip: { trigger: 'axis' },
     xAxis: {
       type: 'category',
-      data: ['Week 1', 'Week 2', 'Week 3', 'Week 4']
+      data: ['第1周', '第2周', '第3周', '第4周']
     },
     yAxis: { type: 'value' },
     series: [{
@@ -155,7 +155,7 @@ const initCharts = () => {
       label: {
         show: true,
         position: 'top',
-        formatter: '${c}'
+        formatter: '¥{c}'
       }
     }]
   })
@@ -168,10 +168,10 @@ const initCharts = () => {
       type: 'pie',
       radius: '60%',
       data: [
-        { value: 856, name: 'Delivered', itemStyle: { color: '#67c23a' } },
-        { value: 234, name: 'Processing', itemStyle: { color: '#e6a23c' } },
-        { value: 98, name: 'Pending', itemStyle: { color: '#909399' } },
-        { value: 59, name: 'Cancelled', itemStyle: { color: '#f56c6c' } }
+        { value: 856, name: '已送达', itemStyle: { color: '#67c23a' } },
+        { value: 234, name: '处理中', itemStyle: { color: '#e6a23c' } },
+        { value: 98, name: '待处理', itemStyle: { color: '#909399' } },
+        { value: 59, name: '已取消', itemStyle: { color: '#f56c6c' } }
       ],
       label: {
         formatter: '{b}: {c} ({d}%)'
@@ -188,7 +188,7 @@ const initCharts = () => {
     },
     yAxis: {
       type: 'category',
-      data: ['Classic Burger', 'Margherita Pizza', 'Caesar Salad', 'Chicken Wings', 'French Fries']
+      data: ['经典汉堡', '玛格丽特披萨', '凯撒沙拉', '鸡翅', '薯条']
     },
     series: [{
       type: 'bar',
@@ -240,15 +240,16 @@ onMounted(() => {
 
 <style scoped>
 .analytics h2 {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  color: #e5e7eb;
 }
 
 .filter-card {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .kpi-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .kpi-card {
@@ -256,29 +257,30 @@ onMounted(() => {
 }
 
 .trend {
-  margin-top: 10px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .trend-text {
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c7f9cc;
 }
 
 .chart-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .chart-row h3,
 .performers-card h3 {
-  margin-bottom: 15px;
-  color: #606266;
+  margin-bottom: 12px;
+  color: #e5e7eb;
 }
 
 .performers-card {
-  margin-top: 20px;
+  margin-top: 12px;
 }
 </style>
